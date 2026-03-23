@@ -111,6 +111,7 @@ export default function App() {
   return (
     <div className="relative h-screen w-screen overflow-hidden font-sans">
       <FallingHearts />
+      <CursorHearts />
       
       <AnimatePresence mode="wait">
         <motion.div
@@ -171,6 +172,54 @@ export default function App() {
         />
       </div>
     </div>
+  );
+}
+
+function CursorHearts() {
+  const [hearts, setHearts] = useState<{ id: number; x: number; y: number; size: number; color: string }[]>([]);
+  const heartId = useRef(0);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const id = heartId.current++;
+      const colors = ['#ff4d4d', '#ff6666', '#ff8080', '#ff9999', '#ffb3b3'];
+      const newHeart = {
+        id,
+        x: e.clientX,
+        y: e.clientY,
+        size: Math.random() * 20 + 10,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      };
+
+      setHearts(prev => [...prev.slice(-20), newHeart]);
+
+      setTimeout(() => {
+        setHearts(prev => prev.filter(h => h.id !== id));
+      }, 1000);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  return (
+    <>
+      {hearts.map(heart => (
+        <div
+          key={heart.id}
+          className="cursor-heart"
+          style={{
+            left: heart.x,
+            top: heart.y,
+            fontSize: `${heart.size}px`,
+            color: heart.color,
+            '--tw-translate-x': `${(Math.random() - 0.5) * 100}px`
+          } as any}
+        >
+          ❤️
+        </div>
+      ))}
+    </>
   );
 }
 
