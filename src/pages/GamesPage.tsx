@@ -329,7 +329,7 @@ function ScratchGame() {
             >
               💨
             </motion.span>
-            {\" \"}Wow! You revealed the surprise! 🎊
+            {" "}Wow! You revealed the surprise! 🎊
           </motion.div>
         )}
       </div>
