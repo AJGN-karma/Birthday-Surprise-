@@ -34,7 +34,7 @@ export default function CarouselPage({ config }: CarouselPageProps) {
 
       <div className="perspective-1000 relative h-[400px] w-full max-w-[400px] md:h-[500px] md:max-w-[500px]">
         <AnimatePresence mode="popLayout">
-          <motion.div
+            <motion.div
             key={currentIndex}
             initial={{ opacity: 0, x: 100, rotateZ: 10, scale: 0.8 }}
             animate={{ opacity: 1, x: 0, rotateZ: 0, scale: 1 }}
@@ -43,16 +43,22 @@ export default function CarouselPage({ config }: CarouselPageProps) {
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             onDragEnd={(_, info) => {
-              if (info.offset.x > 100) handlePrev();
-              else if (info.offset.x < -100) handleNext();
+              if (info.offset.x > 50) handlePrev();
+              else if (info.offset.x < -50) handleNext();
             }}
-            className="absolute inset-0 flex cursor-grab items-center justify-center overflow-hidden rounded-3xl bg-white shadow-2xl active:cursor-grabbing"
+            className="absolute inset-0 flex cursor-grab items-center justify-center overflow-hidden rounded-3xl bg-black/10 shadow-2xl active:cursor-grabbing"
           >
+            {/* Blurred background to fill space */}
+            <img 
+              src={photos[currentIndex].url} 
+              className="absolute inset-0 h-full w-full object-cover blur-2xl opacity-50"
+              referrerPolicy="no-referrer"
+            />
             <img 
               src={photos[currentIndex].url} 
               alt={`Memory ${currentIndex + 1}`}
               referrerPolicy="no-referrer"
-              className="h-full w-full object-cover"
+              className="relative z-10 max-h-full max-w-full object-contain"
               onError={(e) => {
                 // Fallback if image doesn't exist yet
                 (e.target as HTMLImageElement).style.display = 'none';
