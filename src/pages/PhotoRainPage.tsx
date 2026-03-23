@@ -109,13 +109,19 @@ export default function PhotoRainPage({ onComplete }: PhotoRainPageProps) {
               initial={{ scale: 0, opacity: 0, rotate: -20 }}
               animate={{ scale: 1, opacity: 1, rotate: 0 }}
               transition={{ type: 'spring', damping: 15, stiffness: 100 }}
-              className="shine-effect relative z-10 flex h-64 w-64 items-center justify-center overflow-hidden rounded-3xl bg-white text-9xl shadow-2xl md:h-80 md:w-80"
+              className="shine-effect relative z-10 flex h-64 w-64 items-center justify-center overflow-hidden rounded-3xl bg-black/10 shadow-2xl md:h-80 md:w-80"
             >
+              {/* Blurred background to fill space */}
+              <img 
+                src="/images/rain_photo_page7.jpeg" 
+                className="absolute inset-0 h-full w-full object-cover blur-2xl opacity-50"
+                referrerPolicy="no-referrer"
+              />
               <img 
                 src="/images/rain_photo_page7.jpeg" 
                 alt="Favorite Memory"
                 referrerPolicy="no-referrer"
-                className="h-full w-full object-cover"
+                className="relative z-10 max-h-full max-w-full object-contain"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                   (e.target as HTMLImageElement).parentElement!.innerHTML = "💝";
