@@ -1,0 +1,8 @@
+{
+  "name": "Copy of Birthday Memory Journey",
+  "description": "An interactive, multi-stage birthday surprise experience with games, memories, and special messages.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

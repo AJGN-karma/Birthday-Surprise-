@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+}
+
+body {
+  @apply overflow-hidden bg-black text-white;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+@keyframes heartFall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.falling-heart {
+  position: absolute;
+  font-size: 20px;
+  opacity: 0.4;
+  pointer-events: none;
+  animation: heartFall linear infinite;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh);
+    opacity: 0;
+  }
+}
+
+.floating-heart {
+  position: fixed;
+  font-size: 30px;
+  pointer-events: none;
+  animation: floatUp 3s ease-in forwards;
+}
+
+@keyframes blink {
+  0%, 49%, 100% { opacity: 1; }
+  50%, 99% { opacity: 0; }
+}
+
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 20px;
+  background: currentColor;
+  margin-left: 4px;
+  animation: blink 0.7s ease-in-out infinite;
+}
