@@ -9,13 +9,13 @@ interface CarouselPageProps {
 export default function CarouselPage({ config }: CarouselPageProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const photos = [
-    { id: 1, url: '/images/carousel_photo1_page4.jpg', emoji: "📸" },
-    { id: 2, url: '/images/carousel_photo2_page4.jpg', emoji: "📷" },
-    { id: 3, url: '/images/carousel_photo3_page4.jpg', emoji: "🖼️" },
-    { id: 4, url: '/images/carousel_photo4_page4.jpg', emoji: "✨" },
-    { id: 5, url: '/images/carousel_photo5_page4.jpg', emoji: "💫" },
-    { id: 6, url: '/images/carousel_photo6_page4.jpg', emoji: "⭐" },
-    { id: 7, url: '/images/carousel_photo7_page4.jpg', emoji: "🌟" }
+    { id: 1, url: '/images/carousel_photo1_page4.jpeg', emoji: "📸" },
+    { id: 2, url: '/images/carousel_photo2_page4.jpeg', emoji: "📷" },
+    { id: 3, url: '/images/carousel_photo3_page4.jpeg', emoji: "🖼️" },
+    { id: 4, url: '/images/carousel_photo4_page4.jpeg', emoji: "✨" },
+    { id: 5, url: '/images/carousel_photo5_page4.jpeg', emoji: "💫" },
+    { id: 6, url: '/images/carousel_photo6_page4.jpeg', emoji: "⭐" },
+    { id: 7, url: '/images/carousel_photo7_page4.jpeg', emoji: "🌟" }
   ];
 
   const handleNext = () => {
