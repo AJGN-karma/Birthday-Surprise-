@@ -10,13 +10,13 @@ export default function PhotoRainPage({ onComplete }: PhotoRainPageProps) {
   const [showCenter, setShowCenter] = useState(false);
   const rainEmojis = ["✨", "💫", "⭐", "🌟", "❤️", "💜", "🎉", "🎂", "🎁"];
   const rainImages = [
-    '/images/carousel_photo1_page4.jpg',
-    '/images/carousel_photo2_page4.jpg',
-    '/images/carousel_photo3_page4.jpg',
-    '/images/carousel_photo4_page4.jpg',
-    '/images/carousel_photo5_page4.jpg',
-    '/images/carousel_photo6_page4.jpg',
-    '/images/carousel_photo7_page4.jpg',
+    '/images/carousel_photo1_page4.jpeg',
+    '/images/carousel_photo2_page4.jpeg',
+    '/images/carousel_photo3_page4.jpeg',
+    '/images/carousel_photo4_page4.jpeg',
+    '/images/carousel_photo5_page4.jpeg',
+    '/images/carousel_photo6_page4.jpeg',
+    '/images/carousel_photo7_page4.jpeg',
   ];
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function PhotoRainPage({ onComplete }: PhotoRainPageProps) {
     }, 150);
 
     const timer = setTimeout(() => setShowCenter(true), 1000);
-    const completeTimer = setTimeout(onComplete, 10000); // Longer duration to enjoy the rain
+    const completeTimer = setTimeout(onComplete, 30000); // Hold for 30 seconds
 
     return () => {
       clearInterval(interval);
@@ -112,7 +112,7 @@ export default function PhotoRainPage({ onComplete }: PhotoRainPageProps) {
               className="shine-effect relative z-10 flex h-64 w-64 items-center justify-center overflow-hidden rounded-3xl bg-white text-9xl shadow-2xl md:h-80 md:w-80"
             >
               <img 
-                src="/images/rain_photo_page7.jpg" 
+                src="/images/rain_photo_page7.jpeg" 
                 alt="Favorite Memory"
                 referrerPolicy="no-referrer"
                 className="h-full w-full object-cover"
