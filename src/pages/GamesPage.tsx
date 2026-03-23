@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 
 export default function GamesPage() {
   return (
@@ -25,8 +25,9 @@ export default function GamesPage() {
 
         <QuizGame 
           title="Question 1" 
-          question="Who is more dramatic? 😆" 
-          options={["You", "Me", "We're equally extra"]}
+          question="Who is more likely to fall asleep ? 😴" 
+          options={["You 👉", "Me 🫣"]}
+          correctIndex={0}
         />
 
         <QuizGame 
@@ -43,14 +44,28 @@ export default function GamesPage() {
   );
 }
 
-function QuizGame({ title, question, options }: { title: string; question: string; options: string[] }) {
+function QuizGame({ title, question, options, correctIndex }: { title: string; question: string; options: string[]; correctIndex?: number }) {
   const [selected, setSelected] = useState<number | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const handleSelect = (index: number) => {
     setSelected(index);
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3000);
+    if (correctIndex !== undefined) {
+      if (index === correctIndex) {
+        setShowSuccess(true);
+        setShowError(false);
+      } else {
+        setShowError(true);
+        setShowSuccess(false);
+      }
+    } else {
+      setShowSuccess(true);
+    }
+    setTimeout(() => {
+      setShowSuccess(false);
+      setShowError(false);
+    }, 3000);
   };
 
   return (
@@ -69,7 +84,7 @@ function QuizGame({ title, question, options }: { title: string; question: strin
             onClick={() => handleSelect(i)}
             className={`cursor-pointer rounded-xl border-2 p-4 text-left font-medium transition-all hover:translate-x-2 ${
               selected === i 
-                ? 'border-[#667eea] bg-[#667eea] text-white' 
+                ? (correctIndex !== undefined && i !== correctIndex ? 'border-red-500 bg-red-500 text-white' : 'border-[#667eea] bg-[#667eea] text-white')
                 : 'border-gray-100 bg-gray-50 text-gray-700 hover:border-[#667eea] hover:bg-[#667eea] hover:text-white'
             }`}
           >
@@ -83,7 +98,16 @@ function QuizGame({ title, question, options }: { title: string; question: strin
           animate={{ y: 0, opacity: 1 }}
           className="mt-4 rounded-xl border-2 border-green-500 bg-green-50 p-4 text-center font-bold text-green-800"
         >
-          See? You know me so well ❤️
+          {correctIndex !== undefined ? "Correct! You know it! ❤️" : "See? You know me so well ❤️"}
+        </motion.div>
+      )}
+      {showError && (
+        <motion.div 
+          initial={{ y: -10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="mt-4 rounded-xl border-2 border-red-500 bg-red-50 p-4 text-center font-bold text-red-800"
+        >
+          Wrong! Try again 🫣
         </motion.div>
       )}
     </motion.div>
@@ -93,8 +117,32 @@ function QuizGame({ title, question, options }: { title: string; question: strin
 function HeartClickerGame() {
   const [score, setScore] = useState(0);
   const [hearts, setHearts] = useState<number[]>(Array.from({ length: 9 }).map((_, i) => i));
+  const [timeLeft, setTimeLeft] = useState(15);
+  const [isGameStarted, setIsGameStarted] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isGameStarted && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft(t => t - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      setIsGameOver(true);
+      setIsGameStarted(false);
+    }
+    return () => clearInterval(timer);
+  }, [isGameStarted, timeLeft]);
+
+  const startGame = () => {
+    setScore(0);
+    setTimeLeft(15);
+    setIsGameStarted(true);
+    setIsGameOver(false);
+  };
 
   const handleClick = (id: number) => {
+    if (!isGameStarted) return;
     setScore(s => s + 1);
     setHearts(prev => prev.filter(h => h !== id));
     setTimeout(() => setHearts(prev => [...prev, id]), 1000);
@@ -108,8 +156,35 @@ function HeartClickerGame() {
       className="rounded-3xl bg-white/95 p-8 text-center shadow-2xl"
     >
       <h3 className="mb-4 text-xl font-black text-[#667eea]">❤️ Heart Clicker</h3>
-      <p className="mb-6 text-lg font-medium text-gray-800">Click the hearts as fast as you can!</p>
-      <div className="flex flex-wrap justify-center gap-4">
+      {!isGameStarted && !isGameOver && (
+        <button 
+          onClick={startGame}
+          className="mb-6 rounded-xl bg-[#667eea] px-8 py-3 font-bold text-white shadow-lg transition-all hover:scale-105"
+        >
+          Start Game (15s)
+        </button>
+      )}
+      
+      {isGameStarted && (
+        <div className="mb-4 text-xl font-bold text-red-500">
+          Time Left: {timeLeft}s
+        </div>
+      )}
+
+      {isGameOver && (
+        <div className="mb-6">
+          <p className="text-2xl font-black text-[#667eea]">Game Over!</p>
+          <p className="text-lg font-bold text-gray-600">Final Score: {score}</p>
+          <button 
+            onClick={startGame}
+            className="mt-4 rounded-xl bg-[#667eea] px-8 py-3 font-bold text-white shadow-lg transition-all hover:scale-105"
+          >
+            Play Again
+          </button>
+        </div>
+      )}
+
+      <div className={`flex flex-wrap justify-center gap-4 ${!isGameStarted ? 'opacity-50 pointer-events-none' : ''}`}>
         {hearts.map(id => (
           <motion.div
             key={id}
@@ -197,9 +272,23 @@ function ScratchGame() {
       
       <div className="flex flex-col items-center gap-6">
         <div className="relative h-[300px] w-[300px] overflow-hidden rounded-2xl border-4 border-dashed border-[#667eea] bg-white">
-          <div className="flex h-full w-full items-center justify-center text-9xl">
-            🎉
-          </div>
+          <AnimatePresence>
+            {isRevealed && (
+              <motion.div 
+                initial={{ scale: 0.5, opacity: 0, filter: 'blur(20px)' }}
+                animate={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
+                transition={{ 
+                  duration: 0.8, 
+                  type: 'spring',
+                  damping: 12,
+                  stiffness: 100
+                }}
+                className="flex h-full w-full items-center justify-center text-9xl"
+              >
+                🎉
+              </motion.div>
+            )}
+          </AnimatePresence>
           {!isRevealed && (
             <canvas
               ref={canvasRef}
@@ -208,6 +297,7 @@ function ScratchGame() {
               onMouseDown={() => setIsDrawing(true)}
               onMouseMove={handleMove}
               onMouseUp={() => setIsDrawing(false)}
+              onMouseUpCapture={() => setIsDrawing(false)}
               onMouseOut={() => setIsDrawing(false)}
               onTouchStart={() => setIsDrawing(true)}
               onTouchMove={handleMove}
@@ -219,11 +309,25 @@ function ScratchGame() {
         
         {isRevealed && (
           <motion.div 
-            initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
+            initial={{ y: 20, opacity: 0, scale: 0.8 }}
+            animate={{ 
+              y: [0, -20, 0], 
+              opacity: 1, 
+              scale: 1,
+              transition: {
+                y: { duration: 1, repeat: Infinity, ease: "easeInOut" }
+              }
+            }}
             className="w-full rounded-xl border-2 border-green-500 bg-green-50 p-4 text-center font-bold text-green-800"
           >
-            Wow! You revealed the surprise! 🎊
+            <motion.span
+              animate={{ x: [0, 5, -5, 5, 0] }}
+              transition={{ duration: 0.5, repeat: Infinity }}
+              className="inline-block"
+            >
+              💨
+            </motion.span>
+            {" "}Wow! You revealed the surprise! 🎊
           </motion.div>
         )}
       </div>
