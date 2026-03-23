@@ -59,7 +59,7 @@ function MessageSection({ title, text, delay }: { title: string; text: string; d
   return (
     <div className="space-y-4">
       <h3 className="text-xl font-black text-[#667eea]">{title}</h3>
-      <div className="min-h-[60px] text-lg font-medium leading-relaxed text-gray-800">
+      <div className="min-h-[60px] whitespace-pre-wrap text-lg font-medium leading-relaxed text-gray-800">
         {displayedText}
         {isTyping && <span className="typing-cursor" />}
       </div>
