@@ -283,9 +283,18 @@ function ScratchGame() {
                   damping: 12,
                   stiffness: 100
                 }}
-                className="flex h-full w-full items-center justify-center text-9xl"
+                className="h-full w-full"
               >
-                🎉
+                <img 
+                  src="/images/scratch_reveal.jpeg" 
+                  alt="Surprise"
+                  className="h-full w-full object-cover"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                    (e.target as HTMLImageElement).parentElement!.innerHTML = "🎉";
+                  }}
+                />
               </motion.div>
             )}
           </AnimatePresence>
