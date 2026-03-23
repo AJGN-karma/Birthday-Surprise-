@@ -54,9 +54,9 @@ export default function App() {
     if (currentIndex >= 2 && currentIndex <= 4) {
       if (currentSong) {
         const songMap: Record<string, string> = {
-          romantic: '/audio/song1_romantic.mp3',
-          party: '/audio/song2_party.mp3',
-          funny: '/audio/song3_funny.mp3'
+          romantic: '/audio/song1_romantic.mp3.mpeg',
+          party: '/audio/song2_party.mp3.mpeg',
+          funny: '/audio/song3_funny.mp3.mpeg'
         };
         const songUrl = songMap[currentSong];
 
@@ -72,7 +72,7 @@ export default function App() {
       audio.pause();
     }
     else if (currentIndex === 6) {
-      const dedicatedUrl = '/audio/song4_dedicated.mp3';
+      const dedicatedUrl = '/audio/song4_dedicated.mp3.mpeg';
       if (!audio.src.endsWith(dedicatedUrl)) {
         audio.src = dedicatedUrl;
         audio.play().catch(e => console.log("Audio play failed:", e));
