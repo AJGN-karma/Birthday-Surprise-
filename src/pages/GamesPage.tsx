@@ -219,8 +219,8 @@ function ScratchGame() {
     ctx.fillRect(0, 0, 300, 300);
 
     // Add text
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-    ctx.font = 'bold 20px Inter';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.font = 'bold 24px Inter';
     ctx.textAlign = 'center';
     ctx.fillText('← Scratch here →', 150, 150);
   }, []);
@@ -244,7 +244,7 @@ function ScratchGame() {
 
     ctx.globalCompositeOperation = 'destination-out';
     ctx.beginPath();
-    ctx.arc(x, y, 25, 0, Math.PI * 2);
+    ctx.arc(x, y, 35, 0, Math.PI * 2);
     ctx.fill();
 
     // Check percentage
@@ -255,7 +255,7 @@ function ScratchGame() {
       if (data[i] === 0) cleared++;
     }
     const percentage = (cleared / (data.length / 4)) * 100;
-    if (percentage > 40) {
+    if (percentage > 50) {
       setIsRevealed(true);
     }
   };
@@ -271,72 +271,65 @@ function ScratchGame() {
       <p className="mb-6 text-lg font-medium text-gray-800">Scratch the purple area to reveal your surprise!</p>
       
       <div className="flex flex-col items-center gap-6">
-        <div className="relative h-[300px] w-[300px] overflow-hidden rounded-2xl border-4 border-dashed border-[#667eea] bg-white">
-          <AnimatePresence>
-            {isRevealed && (
-              <motion.div 
-                initial={{ scale: 0.5, opacity: 0, filter: 'blur(20px)' }}
-                animate={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
-                transition={{ 
-                  duration: 0.8, 
-                  type: 'spring',
-                  damping: 12,
-                  stiffness: 100
-                }}
-                className="h-full w-full"
-              >
-                <img 
-                  src="/images/scratch_reveal.jpeg" 
-                  alt="Surprise"
-                  className="h-full w-full object-cover"
-                  referrerPolicy="no-referrer"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                    (e.target as HTMLImageElement).parentElement!.innerHTML = "🎉";
-                  }}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-          {!isRevealed && (
-            <canvas
-              ref={canvasRef}
-              width={300}
-              height={300}
-              onMouseDown={() => setIsDrawing(true)}
-              onMouseMove={handleMove}
-              onMouseUp={() => setIsDrawing(false)}
-              onMouseUpCapture={() => setIsDrawing(false)}
-              onMouseOut={() => setIsDrawing(false)}
-              onTouchStart={() => setIsDrawing(true)}
-              onTouchMove={handleMove}
-              onTouchEnd={() => setIsDrawing(false)}
-              className="absolute inset-0 z-10 cursor-crosshair touch-none"
+        <div className="relative h-[300px] w-[300px] overflow-hidden rounded-2xl border-4 border-dashed border-[#667eea] bg-gray-100">
+          {/* Image is ALWAYS behind the canvas */}
+          <div className="absolute inset-0 h-full w-full">
+            <img 
+              src="/images/scratch_reveal.jpeg" 
+              alt="Surprise"
+              className="h-full w-full object-cover"
+              referrerPolicy="no-referrer"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = 'none';
+                (e.target as HTMLImageElement).parentElement!.innerHTML = "<div class='flex h-full w-full items-center justify-center text-8xl'>🎉</div>";
+              }}
             />
-          )}
+          </div>
+
+          {/* Canvas is on top */}
+          <motion.canvas
+            ref={canvasRef}
+            width={300}
+            height={300}
+            animate={isRevealed ? { opacity: 0, scale: 1.2, filter: 'blur(20px)' } : { opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            onMouseDown={() => setIsDrawing(true)}
+            onMouseMove={handleMove}
+            onMouseUp={() => setIsDrawing(false)}
+            onMouseUpCapture={() => setIsDrawing(false)}
+            onMouseOut={() => setIsDrawing(false)}
+            onTouchStart={() => setIsDrawing(true)}
+            onTouchMove={handleMove}
+            onTouchEnd={() => setIsDrawing(false)}
+            className={`absolute inset-0 z-10 cursor-crosshair touch-none ${isRevealed ? 'pointer-events-none' : ''}`}
+          />
         </div>
         
         {isRevealed && (
           <motion.div 
             initial={{ y: 20, opacity: 0, scale: 0.8 }}
             animate={{ 
-              y: [0, -20, 0], 
+              y: [0, -10, 0], 
               opacity: 1, 
               scale: 1,
-              transition: {
-                y: { duration: 1, repeat: Infinity, ease: "easeInOut" }
-              }
+            }}
+            transition={{
+              y: { duration: 2, repeat: Infinity, ease: "easeInOut" }
             }}
             className="w-full rounded-xl border-2 border-green-500 bg-green-50 p-4 text-center font-bold text-green-800"
           >
             <motion.span
-              animate={{ x: [0, 5, -5, 5, 0] }}
-              transition={{ duration: 0.5, repeat: Infinity }}
+              animate={{ 
+                scale: [1, 1.5, 1],
+                rotate: [0, 10, -10, 0],
+                filter: ["blur(0px)", "blur(2px)", "blur(0px)"]
+              }}
+              transition={{ duration: 1.5, repeat: Infinity }}
               className="inline-block"
             >
               💨
             </motion.span>
-            {" "}Wow! You revealed the surprise! 🎊
+            {\" \"}Wow! You revealed the surprise! 🎊
           </motion.div>
         )}
       </div>
